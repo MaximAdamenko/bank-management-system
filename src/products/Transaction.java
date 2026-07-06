@@ -2,6 +2,8 @@ package products;
 
 import java.time.LocalDateTime;
 
+import util.Money;
+
 /**
  * A single deposit or withdrawal on an account.
  *
@@ -68,6 +70,6 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return type + " of " + amount + " on account " + accountNumber + " at " + occurredAt;
+        return type + " of " + Money.format(amount) + " on account " + accountNumber + " at " + occurredAt;
     }
 }

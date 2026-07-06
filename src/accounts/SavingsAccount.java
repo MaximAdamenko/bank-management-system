@@ -4,6 +4,7 @@ import java.util.Date;
 
 import bank.Client;
 import bank.Employee;
+import util.Money;
 
 /**
  * A savings account.
@@ -59,7 +60,7 @@ public class SavingsAccount extends Account {
 
     @Override
     protected String typeSpecificDetails() {
-        return "  Deposit sum  : " + depositAmount + System.lineSeparator()
+        return "  Deposit sum  : " + Money.format(depositAmount) + System.lineSeparator()
                 + "  Years        : " + years + System.lineSeparator();
     }
 }

@@ -2,6 +2,8 @@ package products;
 
 import java.time.LocalDate;
 
+import util.Money;
+
 /**
  * A loan attached to an eligible account.
  *
@@ -75,7 +77,7 @@ public class Loan {
     @Override
     public String toString() {
         return "Loan #" + loanId + " on account " + accountNumber
-                + ": " + originalAmount + " over " + years + " years, "
-                + monthlyPayment + "/month, started " + startDate;
+                + ": " + Money.format(originalAmount) + " over " + years + " years, "
+                + Money.format(monthlyPayment) + "/month, started " + startDate;
     }
 }

@@ -5,6 +5,7 @@ import java.util.Date;
 
 import bank.Client;
 import bank.Employee;
+import util.Money;
 
 /**
  * Common base for every account the bank can hold.
@@ -234,7 +235,7 @@ public abstract class Account implements Comparable<Account> {
           .append(" (").append(getAccountTypeName()).append(")").append(System.lineSeparator());
         sb.append("  Opening date : ").append(openingDate).append(System.lineSeparator());
         sb.append("  Bank number  : ").append(bankNumber).append(System.lineSeparator());
-        sb.append("  Balance      : ").append(balance).append(System.lineSeparator());
+        sb.append("  Balance      : ").append(Money.format(balance)).append(System.lineSeparator());
         sb.append("  Employee     : ").append(employee).append(System.lineSeparator());
         sb.append(typeSpecificDetails());
         sb.append("  Clients      :").append(System.lineSeparator());

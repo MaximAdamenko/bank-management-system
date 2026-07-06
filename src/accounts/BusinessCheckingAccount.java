@@ -5,6 +5,7 @@ import java.util.Date;
 import bank.Client;
 import bank.Employee;
 import interfaces.ManagementFeeChargeable;
+import util.Money;
 
 /**
  * A business checking account.
@@ -98,7 +99,7 @@ public class BusinessCheckingAccount extends CheckingAccount implements Manageme
     @Override
     protected String typeSpecificDetails() {
         return super.typeSpecificDetails()
-                + "  Revenue      : " + businessRevenue
+                + "  Revenue      : " + Money.format(businessRevenue)
                 + (isVip() ? "  [VIP]" : "") + System.lineSeparator();
     }
 }

@@ -28,7 +28,9 @@ One direction only; each layer knows nothing about the ones above it.
 | Database | `src/db/` | JDBC connection, schema DDL | domain knowledge |
 
 The domain model (`accounts/`, `bank/`, `products/`, `interfaces/`,
-`exceptions/`) is shared by every layer.
+`exceptions/`) is shared by every layer, as is `util/` (`Money` — monetary
+display formatting: thousands separators, two decimals, no scientific
+notation).
 
 - **`menu`** — one class per main-menu category (`AccountsMenu`,
   `MoneyMenu`, `ProductsMenu`, `ReportsMenu`) plus `ConsoleIO` (validated
@@ -123,7 +125,5 @@ client or employee is refused while they have accounts.
 
 ## 6. Known limitations
 
-1. Large monetary values display in scientific notation (e.g. `1.2E7`) —
-   calculation is unaffected; a formatting layer is planned.
-2. Account numbers are `int` in Java — bounded, fine at course scale.
-3. Client identity on seeding/resolution is case-insensitive name match.
+1. Account numbers are `int` in Java — bounded, fine at course scale.
+2. Client identity on seeding/resolution is case-insensitive name match.

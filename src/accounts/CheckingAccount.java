@@ -5,6 +5,7 @@ import java.util.Date;
 import bank.Client;
 import bank.Employee;
 import interfaces.Profitable;
+import util.Money;
 
 /**
  * Common base for accounts that offer an overdraft (credit) limit.
@@ -61,6 +62,6 @@ public abstract class CheckingAccount extends Account implements Profitable {
 
     @Override
     protected String typeSpecificDetails() {
-        return "  Credit limit : " + credit + System.lineSeparator();
+        return "  Credit limit : " + Money.format(credit) + System.lineSeparator();
     }
 }

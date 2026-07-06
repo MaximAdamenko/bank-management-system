@@ -2,6 +2,8 @@ package products;
 
 import java.time.LocalDate;
 
+import util.Money;
+
 /**
  * A payment card issued against an account.
  *
@@ -77,7 +79,7 @@ public class Card {
     @Override
     public String toString() {
         return cardType + " card #" + cardId + " on account " + accountNumber
-                + (cardType == CardType.CREDIT ? " (limit " + creditLimit + ")" : "")
+                + (cardType == CardType.CREDIT ? " (limit " + Money.format(creditLimit) + ")" : "")
                 + ", issued " + issuedDate;
     }
 }

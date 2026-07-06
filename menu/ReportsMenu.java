@@ -6,6 +6,7 @@ import accounts.Account;
 import accounts.CheckingAccount;
 import interfaces.ManagementFeeChargeable;
 import service.BankManager;
+import util.Money;
 
 /** The Reports sub-menu: profit and management-fee queries. IO only. */
 public final class ReportsMenu {
@@ -36,12 +37,12 @@ public final class ReportsMenu {
     private void profitForAccount() throws SQLException {
         int number = ConsoleIO.readInt(Strings.PROMPT_ACCOUNT_NUMBER);
         double profit = bank.reports().getAnnualProfitForAccount(number);
-        System.out.println(String.format(Strings.ACCOUNT_PROFIT, number, profit));
+        System.out.println(String.format(Strings.ACCOUNT_PROFIT, number, Money.format(profit)));
     }
 
     private void totalProfit() throws SQLException {
         System.out.println(
-                String.format(Strings.TOTAL_PROFIT, bank.reports().getTotalAnnualProfit()));
+                String.format(Strings.TOTAL_PROFIT, Money.format(bank.reports().getTotalAnnualProfit())));
     }
 
     private void profitableAccounts() throws SQLException {
@@ -69,9 +70,9 @@ public final class ReportsMenu {
         for (Account account : accounts) {
             double fee = ((ManagementFeeChargeable) account).calculateManagementFee();
             System.out.println(String.format(Strings.FEE_LINE,
-                    account.getAccountNumber(), account.getAccountTypeName(), fee));
+                    account.getAccountNumber(), account.getAccountTypeName(), Money.format(fee)));
             ceoBonus += fee;
         }
-        System.out.println(String.format(Strings.CEO_BONUS, ceoBonus));
+        System.out.println(String.format(Strings.CEO_BONUS, Money.format(ceoBonus)));
     }
 }

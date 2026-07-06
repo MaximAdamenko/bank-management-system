@@ -91,6 +91,7 @@ src/bank/          Client, Employee
 src/products/      Loan, Mortgage, Card, Transaction
 src/interfaces/    Profitable, ManagementFeeChargeable
 src/exceptions/    DuplicationException
+src/util/          Money (display formatting)
 ```
 
 See [DESIGN.md](DESIGN.md) for the architecture and the 10-table schema.

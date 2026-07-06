@@ -91,7 +91,7 @@ Main.java          entry point: connect, main menu loop
 menu/              console layer: one class per menu + ConsoleIO + Strings
 src/service/       business rules and transaction boundaries (no SQL)
 src/dao/           all SQL, as PreparedStatements (no business rules)
-sql/               create_tables.sql + insert_data.sql (run via psql)
+sql/               create_tables.sql + insert_data.sql + queries.sql (psql)
 src/db/            JDBC connection (db.properties)
 src/accounts/      Account class hierarchy
 src/bank/          Client, Employee

@@ -1,0 +1,69 @@
+import java.sql.SQLException;
+
+import exceptions.DuplicationException;
+import menu.AccountsMenu;
+import menu.ConsoleIO;
+import menu.MoneyMenu;
+import menu.ProductsMenu;
+import menu.ReportsMenu;
+import menu.Strings;
+import service.BankManager;
+
+/**
+ * The entry point: connects, seeds an empty database, and runs the main
+ * menu loop - nothing else. Each main-menu category is its own class
+ * ({@link AccountsMenu}, {@link MoneyMenu}, {@link ProductsMenu},
+ * {@link ReportsMenu}); shared input/output plumbing is {@link ConsoleIO}.
+ * Every label lives in {@link Strings}, every business rule and every SQL
+ * statement lives behind {@link BankManager}. Bad input or a rejected
+ * operation returns to the menu - only a database failure ends the program.
+ */
+public final class Main {
+
+    private Main() {
+    }
+
+    public static void main(String[] args) {
+        try {
+            BankManager bank = new BankManager(Strings.BANK_NAME);
+            System.out.println(String.format(Strings.WELCOME, bank.getName()));
+            seedIfNeeded(bank);
+            mainLoop(bank);
+            bank.close();
+            System.out.println(Strings.GOODBYE);
+        } catch (SQLException | DuplicationException e) {
+            System.out.println(Strings.FATAL_DB_ERROR + e.getMessage());
+        }
+    }
+
+    /** First run against an empty database loads the sample data; later runs skip it. */
+    private static void seedIfNeeded(BankManager bank) throws SQLException, DuplicationException {
+        if (bank.getAllAccounts().length == 0) {
+            System.out.println(Strings.SEEDING);
+            sample.seedIfEmpty(bank);
+            System.out.println(Strings.SEEDED);
+        }
+    }
+
+    private static void mainLoop(BankManager bank) throws SQLException {
+        AccountsMenu accounts = new AccountsMenu(bank);
+        MoneyMenu money = new MoneyMenu(bank);
+        ProductsMenu products = new ProductsMenu(bank);
+        ReportsMenu reports = new ReportsMenu(bank);
+        while (true) {
+            System.out.println(Strings.MAIN_MENU);
+            switch (ConsoleIO.readInt(Strings.PROMPT_CHOICE)) {
+                case 1 -> accounts.run();
+                case 2 -> money.run();
+                case 3 -> products.runLoans();
+                case 4 -> products.runMortgages();
+                case 5 -> products.runCards();
+                case 6 -> reports.run();
+                case 0 -> {
+                    return;
+                }
+                default -> System.out.println(Strings.INVALID_CHOICE);
+            }
+        }
+    }
+}

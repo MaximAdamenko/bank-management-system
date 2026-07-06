@@ -36,6 +36,7 @@ public final class Strings {
              2. Find an account by number
              3. Show all accounts
              4. Show accounts by type
+             5. Close an account
              0. Back""";
 
     public static final String MONEY_MENU = """
@@ -65,6 +66,7 @@ public final class Strings {
             --- Cards ---
              1. Issue a card
              2. Check an account's cards
+             3. Cancel a card
              0. Back""";
 
     public static final String REPORTS_MENU = """
@@ -110,10 +112,14 @@ public final class Strings {
     public static final String PROMPT_ORIGINAL_AMOUNT = "Original amount: ";
     public static final String PROMPT_MONTHLY_PAYMENT = "Monthly payment: ";
     public static final String PROMPT_CARD_CREDIT_LIMIT = "Card credit limit: ";
+    public static final String PROMPT_CARD_ID = "Card id: ";
 
     // -------------------------------------------------------------- feedback
 
     public static final String ACCOUNT_OPENED = "Account #%d opened.";
+    public static final String ACCOUNT_CLOSED =
+            "Account #%d closed (its cards and transaction log went with it).";
+    public static final String CARD_CANCELLED = "Card #%d cancelled.";
     public static final String ACCOUNT_NOT_FOUND = "No account with number %d.";
     public static final String NO_ACCOUNTS = "(no accounts)";
     public static final String NONE_FOUND = "(none)";

@@ -152,6 +152,29 @@ public class ProductDAO {
         return cards;
     }
 
+    /** Deletes the card. @return false if no card had this id. */
+    public boolean deleteCard(int cardId) throws SQLException {
+        String sql = "DELETE FROM cards WHERE card_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, cardId);
+            return statement.executeUpdate() > 0;
+        }
+    }
+
+    /** @return how many loans and mortgages the account has, combined. */
+    public int countOpenBorrowings(int accountNumber) throws SQLException {
+        String sql = "SELECT (SELECT COUNT(*) FROM loans WHERE account_number = ?) "
+                + "+ (SELECT COUNT(*) FROM mortgages WHERE account_number = ?) AS borrowings";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, accountNumber);
+            statement.setInt(2, accountNumber);
+            try (ResultSet rs = statement.executeQuery()) {
+                rs.next();
+                return rs.getInt("borrowings");
+            }
+        }
+    }
+
     /** @return how many cards the account currently holds. */
     public int countCards(int accountNumber) throws SQLException {
         String sql = "SELECT COUNT(*) AS card_count FROM cards WHERE account_number = ?";

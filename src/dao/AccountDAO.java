@@ -150,6 +150,19 @@ public class AccountDAO {
         }
     }
 
+    /**
+     * Deletes the account's base row. The details row, cards and transaction
+     * log go with it (ON DELETE CASCADE); the database refuses while loans or
+     * mortgages still reference it (ON DELETE RESTRICT).
+     */
+    public void delete(int number) throws SQLException {
+        String sql = "DELETE FROM accounts WHERE account_number = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, number);
+            statement.executeUpdate();
+        }
+    }
+
     /** Overwrites the stored balance with the account's current in-memory balance. */
     public void updateBalance(Account account) throws SQLException {
         String sql = "UPDATE accounts SET balance = ? WHERE account_number = ?";

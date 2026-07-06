@@ -98,6 +98,38 @@ public class BankManager {
         }
     }
 
+    // ----------------------------------------------------------------- closing
+
+    /**
+     * Closes (deletes) the account: its details row, cards and transaction
+     * log are removed with it by the schema's ON DELETE CASCADE rules.
+     *
+     * @throws IllegalArgumentException if the account doesn't exist, or
+     *                                  still has open loans or mortgages
+     *                                  (those must be settled first - the
+     *                                  schema backs this with ON DELETE
+     *                                  RESTRICT).
+     */
+    public void closeAccount(int accountNumber) throws SQLException {
+        requireAccount(accountNumber);
+        if (productDao.countOpenBorrowings(accountNumber) > 0) {
+            throw new IllegalArgumentException("Account #" + accountNumber
+                    + " still has open loans or mortgages and cannot be closed.");
+        }
+        accountDao.delete(accountNumber);
+    }
+
+    /**
+     * Cancels (deletes) a card.
+     *
+     * @throws IllegalArgumentException if no card has this id.
+     */
+    public void cancelCard(int cardId) throws SQLException {
+        if (!productDao.deleteCard(cardId)) {
+            throw new IllegalArgumentException("No card with id " + cardId + ".");
+        }
+    }
+
     // ------------------------------------------------------------------ adding
 
     /**

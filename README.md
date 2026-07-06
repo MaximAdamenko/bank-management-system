@@ -18,6 +18,10 @@ No frameworks: plain Java, JDBC, and SQL. All SQL lives in DAO classes as
 - **Deposits & withdrawals** — balance floors enforced (overdraft up to the
   credit limit for checking accounts, 0 for the rest), every movement
   logged to a transactions table.
+- **Account closing & card cancellation** — closing an account is refused
+  while it has open loans or mortgages (schema-backed: `ON DELETE
+  RESTRICT`); once clean, its details, cards and transaction log are
+  removed with it (`ON DELETE CASCADE`).
 - **Reports** — annual profit per account / total, profitable accounts
   ranked, top checking contributor, management fees + CEO bonus.
 

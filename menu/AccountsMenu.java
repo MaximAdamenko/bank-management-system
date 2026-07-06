@@ -29,6 +29,7 @@ public final class AccountsMenu {
                 case 2 -> ConsoleIO.attempt(this::findAccount);
                 case 3 -> ConsoleIO.attempt(this::showAllAccounts);
                 case 4 -> ConsoleIO.attempt(this::showAccountsByType);
+                case 5 -> ConsoleIO.attempt(this::closeAccount);
                 case 0 -> {
                     return;
                 }
@@ -68,6 +69,12 @@ public final class AccountsMenu {
         };
         bank.addAccount(account);
         System.out.println(String.format(Strings.ACCOUNT_OPENED, number));
+    }
+
+    private void closeAccount() throws SQLException {
+        int number = ConsoleIO.readInt(Strings.PROMPT_ACCOUNT_NUMBER);
+        bank.closeAccount(number);
+        System.out.println(String.format(Strings.ACCOUNT_CLOSED, number));
     }
 
     private void findAccount() throws SQLException {

@@ -50,6 +50,7 @@ public final class ProductsMenu {
             switch (ConsoleIO.readInt(Strings.PROMPT_CHOICE)) {
                 case 1 -> ConsoleIO.attempt(this::issueCard);
                 case 2 -> ConsoleIO.attempt(this::showCards);
+                case 3 -> ConsoleIO.attempt(this::cancelCard);
                 case 0 -> {
                     return;
                 }
@@ -107,6 +108,12 @@ public final class ProductsMenu {
         } else {
             System.out.println(String.format(Strings.DONE, card));
         }
+    }
+
+    private void cancelCard() throws SQLException {
+        int cardId = ConsoleIO.readInt(Strings.PROMPT_CARD_ID);
+        bank.cancelCard(cardId);
+        System.out.println(String.format(Strings.CARD_CANCELLED, cardId));
     }
 
     private void showCards() throws SQLException {

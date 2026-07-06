@@ -16,7 +16,6 @@ import dao.EmployeeDAO;
 import dao.ProductDAO;
 import dao.TransactionDAO;
 import db.DatabaseConnection;
-import db.Schema;
 import exceptions.DuplicationException;
 import products.Card;
 import products.Loan;
@@ -60,7 +59,6 @@ public class BankManager {
     public BankManager(String name) throws SQLException {
         this.name = (name == null || name.trim().isEmpty()) ? "Bank" : name.trim();
         this.connection = DatabaseConnection.getConnection();
-        Schema.ensureSchema(connection);
         this.accountDao = new AccountDAO(connection);
         this.clientDao = new ClientDAO(connection);
         this.employeeDao = new EmployeeDAO(connection);

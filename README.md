@@ -38,10 +38,12 @@ No frameworks: plain Java, JDBC, and SQL. All SQL lives in DAO classes as
 
 ## Setup
 
-1. Create the database (schema is created automatically on first run):
+1. Create the database and its tables (the program never creates tables —
+   the schema is applied with plain SQL, in the database):
 
    ```bash
    createdb -h localhost -U postgres bankdb
+   psql -h localhost -U postgres -d bankdb -f sql/create_tables.sql
    ```
 
 2. Configure credentials — copy the template and fill in your password:
@@ -85,7 +87,8 @@ sample.java        idempotent sample-data seeder (uses the service API, no SQL)
 menu/              console layer: one class per menu + ConsoleIO + Strings
 src/service/       business rules and transaction boundaries (no SQL)
 src/dao/           all SQL, as PreparedStatements (no business rules)
-src/db/            JDBC connection (db.properties) + schema DDL
+sql/               create_tables.sql — the schema DDL (run via psql)
+src/db/            JDBC connection (db.properties)
 src/accounts/      Account class hierarchy
 src/bank/          Client, Employee
 src/products/      Loan, Mortgage, Card, Transaction

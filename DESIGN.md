@@ -25,7 +25,7 @@ One direction only; each layer knows nothing about the ones above it.
 | Console | `menu/` | menus, input validation, output text | business rules, SQL |
 | Service | `src/service/` | business rules, transaction boundaries | SQL, console IO |
 | Data access | `src/dao/` | all SQL, as `PreparedStatement`s | business rules |
-| Database | `src/db/` | JDBC connection, schema DDL | domain knowledge |
+| Database | `src/db/` | JDBC connection | domain knowledge |
 
 The domain model (`accounts/`, `bank/`, `products/`, `interfaces/`,
 `exceptions/`) is shared by every layer, as is `util/` (`Money` — monetary
@@ -51,8 +51,8 @@ notation).
   an account in **one** statement (JOIN clients + employees, LEFT JOIN all
   three details tables) — no N+1 queries.
 - **`db`** — `DatabaseConnection` reads `db.properties` (never hardcoded
-  credentials); `Schema` creates all tables idempotently
-  (`CREATE TABLE IF NOT EXISTS`) on startup.
+  credentials). The program never creates tables: the schema is applied
+  directly in the database with `sql/create_tables.sql` (see README setup).
 
 ## 3. Domain model
 
@@ -85,7 +85,7 @@ card; youth debit-only.
 
 ## 4. Relational schema (10 tables, 3NF)
 
-Created by `src/db/Schema.java`. Mapping: **Class Table Inheritance** — one
+Created by `sql/create_tables.sql`. Mapping: **Class Table Inheritance** — one
 base `accounts` table plus one details table per concrete type that has
 extra fields (youth has none, so no details table). Derived values (profit,
 VIP) are never stored — computed in Java from loaded objects.

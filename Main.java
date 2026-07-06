@@ -1,6 +1,5 @@
 import java.sql.SQLException;
 
-import exceptions.DuplicationException;
 import menu.AccountsMenu;
 import menu.ConsoleIO;
 import menu.MoneyMenu;
@@ -10,13 +9,15 @@ import menu.Strings;
 import service.BankManager;
 
 /**
- * The entry point: connects, seeds an empty database, and runs the main
- * menu loop - nothing else. Each main-menu category is its own class
- * ({@link AccountsMenu}, {@link MoneyMenu}, {@link ProductsMenu},
- * {@link ReportsMenu}); shared input/output plumbing is {@link ConsoleIO}.
- * Every label lives in {@link Strings}, every business rule and every SQL
- * statement lives behind {@link BankManager}. Bad input or a rejected
- * operation returns to the menu - only a database failure ends the program.
+ * The entry point: connects and runs the main menu loop - nothing else.
+ * The database itself is created and filled with plain SQL, in the
+ * database (sql/create_tables.sql, sql/insert_data.sql - see README).
+ * Each main-menu category is its own class ({@link AccountsMenu},
+ * {@link MoneyMenu}, {@link ProductsMenu}, {@link ReportsMenu}); shared
+ * input/output plumbing is {@link ConsoleIO}. Every label lives in
+ * {@link Strings}, every business rule and every SQL statement lives
+ * behind {@link BankManager}. Bad input or a rejected operation returns
+ * to the menu - only a database failure ends the program.
  */
 public final class Main {
 
@@ -27,21 +28,11 @@ public final class Main {
         try {
             BankManager bank = new BankManager(Strings.BANK_NAME);
             System.out.println(String.format(Strings.WELCOME, bank.getName()));
-            seedIfNeeded(bank);
             mainLoop(bank);
             bank.close();
             System.out.println(Strings.GOODBYE);
-        } catch (SQLException | DuplicationException e) {
+        } catch (SQLException e) {
             System.out.println(Strings.FATAL_DB_ERROR + e.getMessage());
-        }
-    }
-
-    /** First run against an empty database loads the sample data; later runs skip it. */
-    private static void seedIfNeeded(BankManager bank) throws SQLException, DuplicationException {
-        if (bank.getAllAccounts().length == 0) {
-            System.out.println(Strings.SEEDING);
-            sample.seedIfEmpty(bank);
-            System.out.println(Strings.SEEDED);
         }
     }
 

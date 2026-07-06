@@ -21,7 +21,7 @@ One direction only; each layer knows nothing about the ones above it.
 
 | Layer | Package / files | Responsibility | Never contains |
 |---|---|---|---|
-| Entry | `Main.java` | connect, seed if empty, main loop | business rules, SQL |
+| Entry | `Main.java` | connect, main menu loop | business rules, SQL |
 | Console | `menu/` | menus, input validation, output text | business rules, SQL |
 | Service | `src/service/` | business rules, transaction boundaries | SQL, console IO |
 | Data access | `src/dao/` | all SQL, as `PreparedStatement`s | business rules |
@@ -111,19 +111,19 @@ Delete rules: deleting an account cascades its details, cards and
 transactions but is **refused** while it has loans or mortgages; deleting a
 client or employee is refused while they have accounts.
 
-## 5. Transactions & seeding
+## 5. Transactions & sample data
 
 - `BankManager.inTransaction(work)` sets autocommit off, runs the DAO
   calls, commits, and rolls back whole on any `SQLException`. Used by
   `addAccount` (base row + details + client/employee resolution) and by
   deposit/withdraw (balance update + movement log).
-- `sample.java` seeds the demo data set (16 accounts, 3 employees, 2 loans,
-  2 mortgages, 13 cards, 8 movements) **only when the database is empty**,
-  entirely through the public service API — it contains zero SQL. Youth
-  owners get relative dates of birth (now − 16/14/12 years) so the age gate
-  never expires.
+- `sql/insert_data.sql` fills a fresh database with the demo data set
+  (16 accounts, 3 employees, 2 loans, 2 mortgages, 13 cards, 8 movements)
+  with plain INSERT commands, run in the database like the schema itself.
+  Balances are consistent with the movement log; youth owners get relative
+  dates of birth (today − 16/14/12 years) so the age gate never expires.
 
 ## 6. Known limitations
 
 1. Account numbers are `int` in Java — bounded, fine at course scale.
-2. Client identity on seeding/resolution is case-insensitive name match.
+2. Client identity on resolution is case-insensitive name match.

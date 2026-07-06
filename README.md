@@ -38,12 +38,14 @@ No frameworks: plain Java, JDBC, and SQL. All SQL lives in DAO classes as
 
 ## Setup
 
-1. Create the database and its tables (the program never creates tables —
-   the schema is applied with plain SQL, in the database):
+1. Create the database and its tables, and fill in the sample data (the
+   program never creates or seeds tables — schema and data are applied
+   with plain SQL, in the database):
 
    ```bash
    createdb -h localhost -U postgres bankdb
    psql -h localhost -U postgres -d bankdb -f sql/create_tables.sql
+   psql -h localhost -U postgres -d bankdb -f sql/insert_data.sql
    ```
 
 2. Configure credentials — copy the template and fill in your password:
@@ -66,10 +68,9 @@ java -cp .:src:postgresql-42.7.7.jar Main
 
 (On Windows use `;` instead of `:` in the classpath.)
 
-First launch against an empty database prints `Empty database - loading
-sample data...` and seeds 16 accounts, 3 employees, 2 loans, 2 mortgages,
-13 cards and 8 movements. Later runs skip seeding and show the same data —
-including anything you changed.
+The sample data (16 accounts, 3 employees, 2 loans, 2 mortgages, 13 cards
+and 8 movements) comes from `sql/insert_data.sql` above; everything you
+change through the program persists in PostgreSQL across runs.
 
 ## Using the menu
 
@@ -82,12 +83,11 @@ reason and return to the menu — only a database failure ends the program.
 ## Project layout
 
 ```
-Main.java          entry point: connect, seed if empty, main menu loop
-sample.java        idempotent sample-data seeder (uses the service API, no SQL)
+Main.java          entry point: connect, main menu loop
 menu/              console layer: one class per menu + ConsoleIO + Strings
 src/service/       business rules and transaction boundaries (no SQL)
 src/dao/           all SQL, as PreparedStatements (no business rules)
-sql/               create_tables.sql — the schema DDL (run via psql)
+sql/               create_tables.sql + insert_data.sql (run via psql)
 src/db/            JDBC connection (db.properties)
 src/accounts/      Account class hierarchy
 src/bank/          Client, Employee

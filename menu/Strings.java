@@ -13,8 +13,6 @@ public final class Strings {
 
     public static final String BANK_NAME = "BankManager";
     public static final String WELCOME = "=== Welcome to %s ===";
-    public static final String SEEDING = "Empty database - loading sample data...";
-    public static final String SEEDED = "Sample data loaded.";
     public static final String GOODBYE = "Goodbye.";
     public static final String FATAL_DB_ERROR = "Database error: ";
 

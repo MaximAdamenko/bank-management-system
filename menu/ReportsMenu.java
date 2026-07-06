@@ -5,16 +5,16 @@ import java.sql.SQLException;
 import accounts.Account;
 import accounts.CheckingAccount;
 import interfaces.ManagementFeeChargeable;
-import service.BankManager;
+import service.Reports;
 import util.Money;
 
 /** The Reports sub-menu: profit and management-fee queries. IO only. */
 public final class ReportsMenu {
 
-    private final BankManager bank;
+    private final Reports reports;
 
-    public ReportsMenu(BankManager bank) {
-        this.bank = bank;
+    public ReportsMenu(Reports reports) {
+        this.reports = reports;
     }
 
     public void run() throws SQLException {
@@ -36,22 +36,22 @@ public final class ReportsMenu {
 
     private void profitForAccount() throws SQLException {
         int number = ConsoleIO.readInt(Strings.PROMPT_ACCOUNT_NUMBER);
-        double profit = bank.reports().getAnnualProfitForAccount(number);
+        double profit = reports.getAnnualProfitForAccount(number);
         System.out.println(String.format(Strings.ACCOUNT_PROFIT, number, Money.format(profit)));
     }
 
     private void totalProfit() throws SQLException {
         System.out.println(
-                String.format(Strings.TOTAL_PROFIT, Money.format(bank.reports().getTotalAnnualProfit())));
+                String.format(Strings.TOTAL_PROFIT, Money.format(reports.getTotalAnnualProfit())));
     }
 
     private void profitableAccounts() throws SQLException {
-        ConsoleIO.printAll(bank.reports().getProfitableAccountsSortedByProfitDesc(),
+        ConsoleIO.printAll(reports.getProfitableAccountsSortedByProfitDesc(),
                 Strings.NONE_FOUND);
     }
 
     private void topContributor() throws SQLException {
-        CheckingAccount top = bank.reports().getTopCheckingContributor();
+        CheckingAccount top = reports.getTopCheckingContributor();
         if (top == null) {
             System.out.println(Strings.NO_CHECKING_ACCOUNTS);
         } else {
@@ -61,7 +61,7 @@ public final class ReportsMenu {
 
     /** Every fee-charged account plus the CEO's total bonus (the sum of all fees). */
     private void managementFees() throws SQLException {
-        Account[] accounts = bank.reports().getFeeChargeableAccounts();
+        Account[] accounts = reports.getFeeChargeableAccounts();
         System.out.println(Strings.FEES_HEADER);
         if (accounts.length == 0) {
             System.out.println(Strings.NO_FEES);

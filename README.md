@@ -48,9 +48,15 @@ No frameworks: plain Java, JDBC, and SQL. All SQL lives in DAO classes as
 
    ```bash
    createdb -h localhost -U postgres bankdb
-   psql -h localhost -U postgres -d bankdb -f sql/create_tables.sql
-   psql -h localhost -U postgres -d bankdb -f sql/insert_data.sql
+   psql -h localhost -U postgres -d bankdb -f src/db/sql/create_tables.sql
+   psql -h localhost -U postgres -d bankdb -f src/db/sql/create_trigger.sql
+   psql -h localhost -U postgres -d bankdb -f src/db/sql/insert_data.sql
    ```
+
+   `create_trigger.sql` installs a deferred constraint trigger that rejects,
+   at commit, any balance change not backed by the movement log — the
+   database enforces the balance/log consistency even against raw SQL that
+   bypasses the program.
 
 2. Configure credentials — copy the template and fill in your password:
 
@@ -73,7 +79,7 @@ java -cp .:src:postgresql-42.7.7.jar Main
 (On Windows use `;` instead of `:` in the classpath.)
 
 The sample data (16 accounts, 3 employees, 2 loans, 2 mortgages, 13 cards
-and 8 movements) comes from `sql/insert_data.sql` above; everything you
+and 8 movements) comes from `src/db/sql/insert_data.sql` above; everything you
 change through the program persists in PostgreSQL across runs.
 
 ## Using the menu
@@ -91,8 +97,10 @@ Main.java          entry point: connect, main menu loop
 menu/              console layer: one class per menu + ConsoleIO + Strings
 src/service/       business rules and transaction boundaries (no SQL)
 src/dao/           all SQL, as PreparedStatements (no business rules)
-sql/               create_tables.sql + insert_data.sql + queries.sql (psql)
 src/db/            JDBC connection (db.properties)
+src/db/sql/        the course SQL deliverables (create_tables/
+                   create_trigger/insert_data/queries.sql, applied with
+                   psql - see Setup)
 src/accounts/      Account class hierarchy
 src/bank/          Client, Employee
 src/products/      Loan, Mortgage, Card, Transaction

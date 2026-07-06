@@ -11,7 +11,7 @@ import service.BankManager;
 /**
  * The entry point: connects and runs the main menu loop - nothing else.
  * The database itself is created and filled with plain SQL, in the
- * database (sql/create_tables.sql, sql/insert_data.sql - see README).
+ * database (src/db/sql/create_tables.sql, src/db/sql/insert_data.sql - see README).
  * Each main-menu category is its own class ({@link AccountsMenu},
  * {@link MoneyMenu}, {@link ProductsMenu}, {@link ReportsMenu}); shared
  * input/output plumbing is {@link ConsoleIO}. Every label lives in
@@ -37,10 +37,10 @@ public final class Main {
     }
 
     private static void mainLoop(BankManager bank) throws SQLException {
-        AccountsMenu accounts = new AccountsMenu(bank);
-        MoneyMenu money = new MoneyMenu(bank);
-        ProductsMenu products = new ProductsMenu(bank);
-        ReportsMenu reports = new ReportsMenu(bank);
+        AccountsMenu accounts = new AccountsMenu(bank.accounts(), bank.reports());
+        MoneyMenu money = new MoneyMenu(bank.money());
+        ProductsMenu products = new ProductsMenu(bank.products());
+        ReportsMenu reports = new ReportsMenu(bank.reports());
         while (true) {
             System.out.println(Strings.MAIN_MENU);
             switch (ConsoleIO.readInt(Strings.PROMPT_CHOICE)) {

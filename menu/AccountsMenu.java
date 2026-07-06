@@ -10,15 +10,18 @@ import accounts.YouthAccount;
 import bank.Client;
 import bank.Employee;
 import exceptions.DuplicationException;
-import service.BankManager;
+import service.AccountService;
+import service.Reports;
 
 /** The Accounts sub-menu: open, find, and list accounts. IO only. */
 public final class AccountsMenu {
 
-    private final BankManager bank;
+    private final AccountService accounts;
+    private final Reports reports;
 
-    public AccountsMenu(BankManager bank) {
-        this.bank = bank;
+    public AccountsMenu(AccountService accounts, Reports reports) {
+        this.accounts = accounts;
+        this.reports = reports;
     }
 
     public void run() throws SQLException {
@@ -47,7 +50,7 @@ public final class AccountsMenu {
         }
         int number = ConsoleIO.readInt(Strings.PROMPT_NEW_ACCOUNT_NUMBER);
         if (number == 0) {
-            number = bank.nextAutoNumber();
+            number = accounts.nextAutoNumber();
         }
         int bankNumber = ConsoleIO.readInt(Strings.PROMPT_BANK_NUMBER);
         Employee employee = new Employee(ConsoleIO.readInt(Strings.PROMPT_EMPLOYEE_ID),
@@ -67,19 +70,19 @@ public final class AccountsMenu {
                     ConsoleIO.readInt(Strings.PROMPT_YEARS));
             default -> new YouthAccount(number, bankNumber, employee, owner);
         };
-        bank.addAccount(account);
+        accounts.addAccount(account);
         System.out.println(String.format(Strings.ACCOUNT_OPENED, number));
     }
 
     private void closeAccount() throws SQLException {
         int number = ConsoleIO.readInt(Strings.PROMPT_ACCOUNT_NUMBER);
-        bank.closeAccount(number);
+        accounts.closeAccount(number);
         System.out.println(String.format(Strings.ACCOUNT_CLOSED, number));
     }
 
     private void findAccount() throws SQLException {
         int number = ConsoleIO.readInt(Strings.PROMPT_ACCOUNT_NUMBER);
-        Account account = bank.findAccountByNumber(number);
+        Account account = accounts.findAccountByNumber(number);
         if (account == null) {
             System.out.println(String.format(Strings.ACCOUNT_NOT_FOUND, number));
         } else {
@@ -88,7 +91,7 @@ public final class AccountsMenu {
     }
 
     private void showAllAccounts() throws SQLException {
-        ConsoleIO.printAll(bank.reports().getAllAccountsSortedByNumber(), Strings.NO_ACCOUNTS);
+        ConsoleIO.printAll(reports.getAllAccountsSortedByNumber(), Strings.NO_ACCOUNTS);
     }
 
     private void showAccountsByType() throws SQLException {
@@ -104,6 +107,6 @@ public final class AccountsMenu {
             System.out.println(Strings.INVALID_CHOICE);
             return;
         }
-        ConsoleIO.printAll(bank.reports().getAccountsOfType(type), Strings.NONE_FOUND);
+        ConsoleIO.printAll(reports.getAccountsOfType(type), Strings.NONE_FOUND);
     }
 }

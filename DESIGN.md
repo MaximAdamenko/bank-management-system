@@ -52,7 +52,7 @@ notation).
   three details tables) — no N+1 queries.
 - **`db`** — `DatabaseConnection` reads `db.properties` (never hardcoded
   credentials). The program never creates tables: the schema is applied
-  directly in the database with `sql/create_tables.sql` (see README setup).
+  directly in the database with `src/db/sql/create_tables.sql` (see README setup).
 
 ## 3. Domain model
 
@@ -85,7 +85,7 @@ card; youth debit-only.
 
 ## 4. Relational schema (10 tables, 3NF)
 
-Created by `sql/create_tables.sql`. Mapping: **Class Table Inheritance** — one
+Created by `src/db/sql/create_tables.sql`. Mapping: **Class Table Inheritance** — one
 base `accounts` table plus one details table per concrete type that has
 extra fields (youth has none, so no details table). Derived values (profit,
 VIP) are never stored — computed in Java from loaded objects.
@@ -115,9 +115,17 @@ client or employee is refused while they have accounts.
 
 - `BankManager.inTransaction(work)` sets autocommit off, runs the DAO
   calls, commits, and rolls back whole on any `SQLException`. Used by
-  `addAccount` (base row + details + client/employee resolution) and by
-  deposit/withdraw (balance update + movement log).
-- `sql/insert_data.sql` fills a fresh database with the demo data set
+  `addAccount` (base row + details + client/employee resolution + the
+  opening balance logged as the first deposit) and by deposit/withdraw
+  (balance update + movement log).
+- The invariant that every balance equals the net of its movement log is
+  also enforced *inside the database*: `src/db/sql/create_trigger.sql` installs a
+  deferred constraint trigger on `accounts.balance` updates that
+  re-checks the reconciliation at COMMIT and rejects the transaction on
+  mismatch — so even raw SQL that bypasses the program cannot break it.
+  Deferred, because mid-transaction the invariant is briefly false by
+  design (the balance update commits together with its movement row).
+- `src/db/sql/insert_data.sql` fills a fresh database with the demo data set
   (16 accounts, 3 employees, 2 loans, 2 mortgages, 13 cards, 8 movements)
   with plain INSERT commands, run in the database like the schema itself.
   Balances are consistent with the movement log; youth owners get relative

@@ -3,15 +3,15 @@ package menu;
 import java.sql.SQLException;
 
 import products.Transaction;
-import service.BankManager;
+import service.MoneyService;
 
 /** The Deposits & withdrawals sub-menu. IO only. */
 public final class MoneyMenu {
 
-    private final BankManager bank;
+    private final MoneyService money;
 
-    public MoneyMenu(BankManager bank) {
-        this.bank = bank;
+    public MoneyMenu(MoneyService money) {
+        this.money = money;
     }
 
     public void run() throws SQLException {
@@ -31,19 +31,19 @@ public final class MoneyMenu {
 
     private void deposit() throws SQLException {
         int number = ConsoleIO.readInt(Strings.PROMPT_ACCOUNT_NUMBER);
-        Transaction transaction = bank.deposit(number, ConsoleIO.readInt(Strings.PROMPT_AMOUNT));
+        Transaction transaction = money.deposit(number, ConsoleIO.readInt(Strings.PROMPT_AMOUNT));
         System.out.println(String.format(Strings.DONE, transaction));
     }
 
     private void withdraw() throws SQLException {
         int number = ConsoleIO.readInt(Strings.PROMPT_ACCOUNT_NUMBER);
-        Transaction transaction = bank.withdraw(number, ConsoleIO.readInt(Strings.PROMPT_AMOUNT));
+        Transaction transaction = money.withdraw(number, ConsoleIO.readInt(Strings.PROMPT_AMOUNT));
         System.out.println(String.format(Strings.DONE, transaction));
     }
 
     private void showTransactions() throws SQLException {
         ConsoleIO.printAll(
-                bank.getTransactionsForAccount(ConsoleIO.readInt(Strings.PROMPT_ACCOUNT_NUMBER)),
+                money.getTransactionsForAccount(ConsoleIO.readInt(Strings.PROMPT_ACCOUNT_NUMBER)),
                 Strings.NONE_FOUND);
     }
 }
